@@ -1,0 +1,3 @@
+
+0.1|1|3|False|categorical_crossentropy|Adam|0.09908420033752918|0.017370317983161618
+0.1|1|3|False|categorical_crossentropy|SGD|0.9798841536045074|0.002409315143853811
