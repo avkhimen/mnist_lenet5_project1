@@ -16,7 +16,7 @@ from tqdm import tqdm
 
 number_of_dataset_classes = 10
 number_of_K_folds = 10
-dataset = 'mnist'
+dataset = 'fashion_mnist'
 
 def get_dataset(dataset_name):
     if dataset_name == 'mnist':
@@ -234,16 +234,11 @@ def evaluate_model(model, test_x, test_y):
 X_folds, Y_folds = separate_dataset_into_K_folds(X_train, Y_train, 10)
 
 learning_rates = [0.1, 0.01, 0.001, 0.0001, 0.00001]
-#learning_rates = [0.00001]
 optimizers = ['Adam', 'SGD', 'RMSprop']
 num_layers = [1, 2, 3]
-#num_layers = [2, 3]
 kernel_sizes = [3, 5, 7]
-#kernel_sizes = [3, 5]
-#add_dropout = [True, False]
 add_dropout = [False]
 loss_functions = ['categorical_crossentropy', 'kl_divergence']
-#loss_functions = ['kl_divergence']
 
 iterables = create_fold_iterables(X_folds, Y_folds)
 for lr in learning_rates:
@@ -273,7 +268,7 @@ for lr in learning_rates:
                         #print(opt, '|', lr, '|', np.mean(scores), '|', np.std(scores), scores)
                         #print('\n', 'mean is: ', np.mean(scores))
                         #print('std is: ', np.std(scores))
-                        f = open("run_stats.txt", "a")
+                        f = open("fashion_mnist_run0_stats.txt", "a")
                         s = '\n' +  str(lr) + '|' + str(layers) + '|' + str(kernel_size) + '|' + str(dr) + '|' + str(loss_function) + '|' + str(opt) + '|' +  str(np.mean(scores)) + '|' + str(np.std(scores))
                         print(s, np.mean(scores), '|', np.std(scores), scores)
                         f.write(s)
