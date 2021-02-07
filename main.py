@@ -102,6 +102,13 @@ def create_fold_iterables(X_folds, Y_folds):
   iterables = np.array(iterables)
   return iterables
 
+def shuffle_set(X_train, Y_train):
+  indices = np.arange(X_train.shape[0])
+  np.random.shuffle(indices)
+  X_train = X_train[indices]
+  Y_train = Y_train[indices]
+  return X_train, Y_train
+
 #https://medium.com/towards-artificial-intelligence/the-architecture-implementation-of-lenet-5-eef03a68d1f7
 def create_lenet_model(kernel_size, dr, layers):
     
@@ -231,7 +238,7 @@ def evaluate_model(model, test_x, test_y):
 #######################################################################################################
 (X_train, Y_train), (X_test, Y_test) = get_dataset(dataset)
 
-X_folds, Y_folds = separate_dataset_into_K_folds(X_train, Y_train, 10)
+#X_folds, Y_folds = separate_dataset_into_K_folds(X_train, Y_train, 10)
 
 #learning_rates = [0.1, 0.01, 0.001, 0.0001, 0.00001]
 learning_rates = [0.0001, 0.00001]
@@ -241,7 +248,7 @@ kernel_sizes = [3, 5, 7]
 add_dropout = [False]
 loss_functions = ['categorical_crossentropy', 'kl_divergence']
 
-iterables = create_fold_iterables(X_folds, Y_folds)
+#iterables = create_fold_iterables(X_folds, Y_folds)
 for lr in learning_rates:
     for layers in num_layers:
         for kernel_size in kernel_sizes:
@@ -249,6 +256,9 @@ for lr in learning_rates:
                 for loss_function in loss_functions:
                     for opt in optimizers:
                         scores = []
+                        X_train, Y_train = shuffle_set(X_train, Y_train)
+                        X_folds, Y_folds = separate_dataset_into_K_folds(X_train, Y_train, 10)
+                        iterables = create_fold_iterables(X_folds, Y_folds)
                         for iterable in tqdm(iterables):
                             if (kernel_size == 7 and layers == 3) or (kernel_size == 5 and layers == 3):
                                 continue
