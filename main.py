@@ -221,23 +221,23 @@ def compile_and_fit_model(model, train_x, train_y, opt, lr, loss_function):#, va
         loss='kl_divergence'
         
     model.compile(loss=loss, optimizer=opt, metrics=['accuracy'])
-    model.fit(train_x, train_y, batch_size=128, epochs=20, verbose=0)#, validation_data=(val_x, val_y))
+    model.fit(train_x, train_y, batch_size=128, epochs=20, verbose=1)#, validation_data=(val_x, val_y))
     return model
 
 def evaluate_model(model, test_x, test_y):
-    #val_x = test_x.reshape(test_x.shape[0], 28, 28, 1)
-    print('val_x.shape: ', val_x.shape)
-    val_x = test_x/255.0
-    val_y = to_categorical(test_y, num_classes=10)
-    print('val_y.shape: ', val_y.shape)
-    score = model.evaluate(val_x, val_y, batch_size=128)
+    test_x = test_x.reshape(test_x.shape[0], 28, 28, 1)
+    #print('val_x.shape: ', val_x.shape)
+    test_x = test_x/255.0
+    test_y = to_categorical(test_y, num_classes=10)
+    #print('val_y.shape: ', val_y.shape)
+    score = model.evaluate(test_x, test_y, batch_size=128)
     print('Test Loss:', score[0])
     print('Test accuracy:', score[1])
     
     
 #######################################################################################################
 (X_train, Y_train), (X_test, Y_test) = get_dataset(dataset)
-
+"""
 #X_folds, Y_folds = separate_dataset_into_K_folds(X_train, Y_train, 10)
 
 learning_rates = [0.1, 0.01, 0.001, 0.0001, 0.00001]
@@ -284,3 +284,17 @@ for lr in learning_rates:
                         print(s, np.mean(scores), '|', np.std(scores), scores)
                         f.write(s)
                         f.close()
+                        
+"""
+kernel_size = 5
+layers = 2
+dr = False
+opt = "SGD"
+lr = 0.1
+loss_function = 'kl_divergence'
+
+model = create_lenet_model(kernel_size, dr, layers)
+model = compile_and_fit_model(model, X_train, Y_train, opt, lr, loss_function)
+#score = model.evaluate(X_test, Y_test, verbose=1)
+#print(score[1])
+evaluate_model(model, X_test, Y_test)
